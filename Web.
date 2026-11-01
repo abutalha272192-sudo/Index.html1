@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Luxury Fragrances - Men's Collection</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandMaroon: '#4A0E17',
+            brandGold: '#D4AF37',
+            brandGoldHover: '#B59226',
+            brandBg: '#FDFDFD',
+            brandText: '#1A1A1A'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f1f1; }
+    ::-webkit-scrollbar-thumb { background: #4A0E17; border-radius: 4px; }
+  </style>
+</head>
+<body class="bg-brandBg text-brandText font-sans antialiased">
+
+  <!-- 1. ANNOUNCEMENT & GIFT BAR -->
+  <div class="bg-brandMaroon text-white text-xs py-2 px-4">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2">
+      <div class="flex items-center gap-2 font-medium">
+        <span class="bg-brandGold text-brandMaroon text-[10px] font-bold px-2 py-0.5 rounded">LIMITED</span>
+        🔥 Minimum 25% OFF on Bestsellers | Festive Sale Up to 60% OFF 🔥
+      </div>
+      <div class="flex items-center gap-2 text-[11px] bg-black/30 px-3 py-1 rounded-full border border-brandGold/30">
+        <span>🎁 Unlock Free Gift on ₹1,500+ Shopping!</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. MAIN HEADER / NAVIGATION -->
+  <header class="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
+      
+      <!-- Logo -->
+      <a href="#" class="flex items-center gap-2">
+        <div class="w-10 h-10 rounded-full bg-brandMaroon text-brandGold flex items-center justify-center font-bold text-xl border border-brandGold">
+          A
+        </div>
+        <div>
+          <span class="text-xl font-extrabold tracking-widest text-brandMaroon block leading-none">AJMAL</span>
+          <span class="text-[9px] tracking-widest text-brandGold uppercase font-semibold">Parfums India</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden lg:flex items-center space-x-6 text-sm font-semibold text-gray-700">
+        <a href="#" class="text-brandMaroon border-b-2 border-brandGold pb-1">Men's Perfumes</a>
+        <a href="#" class="hover:text-brandMaroon transition">Women</a>
+        <a href="#" class="hover:text-brandMaroon transition">Attars</a>
+        <a href="#" class="hover:text-brandMaroon transition">Oud Series</a>
+        <a href="#" class="hover:text-brandMaroon transition">Gift Sets</a>
+        <a href="#" class="text-red-600 hover:text-red-700 font-bold transition">Offers %</a>
+      </nav>
+
+      <!-- Search & Cart Icons -->
+      <div class="flex items-center space-x-4">
+        <div class="relative hidden sm:block w-48 lg:w-64">
+          <input type="text" id="searchInput" placeholder="Search perfume..." class="w-full bg-gray-100 text-xs rounded-full pl-9 pr-4 py-2 border border-transparent focus:border-brandGold focus:bg-white focus:outline-none transition">
+          <i data-lucide="search" class="w-4 h-4 absolute left-3 top-2.5 text-gray-400"></i>
+        </div>
+        <button class="p-2 hover:bg-gray-100 rounded-full relative">
+          <i data-lucide="heart" class="w-5 h-5 text-gray-700"></i>
+        </button>
+        <button onclick="toggleCart()" class="p-2 hover:bg-gray-100 rounded-full relative">
+          <i data-lucide="shopping-bag" class="w-5 h-5 text-brandMaroon"></i>
+          <span id="cartCount" class="absolute top-0 right-0 bg-brandGold text-brandMaroon text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 3. PAGE HEADER BANNER -->
+  <section class="bg-gradient-to-r from-brandMaroon via-red-950 to-brandMaroon text-white py-8 px-4 text-center">
+    <h1 class="text-3xl md:text-4xl font-bold tracking-wide text-brandGold">Men's Perfumes Collection</h1>
+    <p class="text-gray-300 text-xs md:text-sm mt-2 max-w-xl mx-auto">Explore long-lasting luxury perfumes, pure attars, and signature oud scents crafted for everyday elegance and special occasions.</p>
+  </section>
+
+  <!-- 4. MAIN CONTAINER (FILTERS + PRODUCTS) -->
+  <main class="max-w-7xl mx-auto px-4 py-8">
+    
+    <!-- Top Control Bar (Total Items + Mobile Filter Toggle + Sorting) -->
+    <div class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-gray-200 mb-6">
+      <div class="text-sm text-gray-600">
+        Showing <span id="productCount" class="font-bold text-brandMaroon">0</span> products
+      </div>
+      
+      <div class="flex items-center gap-3">
+        <!-- Mobile Filter Button -->
+        <button onclick="toggleMobileFilter()" class="lg:hidden flex items-center gap-2 border border-gray-300 rounded-md px-3 py-1.5 text-xs font-semibold text-gray-700">
+          <i data-lucide="sliders-horizontal" class="w-4 h-4"></i> Filters
+        </button>
+
+        <!-- Sort By Dropdown -->
+        <div class="flex items-center gap-2 text-xs">
+          <label for="sortSelect" class="text-gray-500 hidden sm:block">Sort By:</label>
+          <select id="sortSelect" onchange="applyFiltersAndSort()" class="border border-gray-300 rounded-md px-3 py-1.5 text-xs font-semibold bg-white text-gray-700 focus:outline-none focus:border-brandGold">
+            <option value="featured">Featured</option>
+            <option value="best-selling">Best Selling</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="rating">Highest Rated</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      
+      <!-- 5. SIDEBAR FILTERS (Desktop) -->
+      <aside id="filterSidebar" class="hidden lg:block space-y-6">
+        <div class="flex items-center justify-between pb-3 border-b border-gray-200">
+          <h3 class="font-bold text-brandMaroon uppercase text-sm tracking-wider">Filters</h3>
+          <button onclick="resetFilters()" class="text-xs text-brandGold font-semibold hover:underline">Clear All</button>
+        </div>
+
+        <!-- Filter 1: Category -->
+        <div>
+          <h4 class="font-semibold text-xs text-gray-800 uppercase mb-3">Category / Type</h4>
+          <div class="space-y-2 text-xs text-gray-600">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" value="Perfume" onchange="applyFiltersAndSort()" class="filter-category rounded text-brandMaroon focus:ring-brandGold"> Perfume
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" value="Attar" onchange="applyFiltersAndSort()" class="filter-category rounded text-brandMaroon focus:ring-brandGold"> Attar (Non-Alcoholic)
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" value="Gift Pack" onchange="applyFiltersAndSort()" class="filter-category rounded text-brandMaroon focus:ring-brandGold"> Gift Pack
+            </label>
+          </div>
+        </div>
+
+        <!-- Filter 2: Fragrance Family -->
+        <div>
+          <h4 class="font-semibold text-xs text-gray-800 uppercase mb-3">Fragrance Family</h4>
+          <div class="space-y-2 text-xs text-gray-600">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" value="Woody" onchange="applyFiltersAndSort()" class="filter-family rounded text-brandMaroon focus:ring-brandGold"> Woody
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" value="Citrus" onchange="applyFiltersAndSort()" class="filter-family rounded text-brandMaroon focus:ring-brandGold"> Citrus
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" value="Aquatic" onchange="applyFiltersAndSort()" class="filter-family rounded text-brandMaroon focus:ring-brandGold"> Aquatic
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" value="Amber" onchange="applyFiltersAndSort()" class="filter-family rounded text-brandMaroon focus:ring-brandGold"> Amber
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" value="Oudhy" onchange="applyFiltersAndSort()" class="filter-family rounded text-brandMaroon focus:ring-brandGold"> Oudhy / Agarwood
+            </label>
+          </div>
+        </div>
+
+        <!-- Filter 3: Occasion -->
+        <div>
+          <h4 class="font-semibold text-xs text-gray-800 uppercase mb-3">Occasion</h4>
+          <div class="space-y-2 text-xs text-gray-600">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" value="Everyday" onchange="applyFiltersAndSort()" class="filter-occasion rounded text-brandMaroon focus:ring-brandGold"> Everyday Wear
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" value="Office" onchange="applyFiltersAndSort()" class="filter-occasion rounded text-brandMaroon focus:ring-brandGold"> Office Wear
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" value="Party" onchange="applyFiltersAndSort()" class="filter-occasion rounded text-brandMaroon focus:ring-brandGold"> Party & Evening
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" value="Winter" onchange="applyFiltersAndSort()" class="filter-occasion rounded text-brandMaroon focus:ring-brandGold"> Winter Wear
+            </label>
+          </div>
+        </div>
+
+        <!-- Filter 4: Max Price Slider -->
+        <div>
+          <h4 class="font-semibold text-xs text-gray-800 uppercase mb-3">Max Price: ₹<span id="priceValue">5000</span></h4>
+          <input type="range" id="priceRange" min="500" max="5000" step="200" value="5000" oninput="document.getElementById('priceValue').innerText = this.value; applyFiltersAndSort();" class="w-full accent-brandMaroon">
+        </div>
+      </aside>
+
+      <!-- 6. PRODUCT GRID SECTION -->
+      <section class="lg:col-span-3">
+        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <!-- Dynamic Products JavaScript se render honge -->
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- 7. CART DRAWER (Slide-over) -->
+  <div id="cartDrawer" class="fixed inset-0 bg-black/50 z-50 hidden transition-opacity">
+    <div class="absolute right-0 top-0 bottom-0 w-full max-w-md bg-white p-6 flex flex-col justify-between shadow-2xl">
+      <div>
+        <div class="flex items-center justify-between pb-4 border-b">
+          <h2 class="text-lg font-bold text-brandMaroon">Your Shopping Cart</h2>
+          <button onclick="toggleCart()" class="p-1 hover:bg-gray-100 rounded-full"><i data-lucide="x" class="w-5 h-5"></i></button>
+        </div>
+        <div id="cartItems" class="py-4 space-y-4 max-h-[60vh] overflow-y-auto">
+          <p class="text-sm text-gray-500 text-center py-8">Your cart is empty.</p>
+        </div>
+      </div>
+      <div class="border-t pt-4">
+        <div class="flex justify-between font-bold text-base mb-4">
+          <span>Subtotal:</span>
+          <span id="cartTotal" class="text-brandMaroon">₹0</span>
+        </div>
+        <button class="w-full bg-brandMaroon hover:bg-black text-brandGold font-bold py-3 rounded-md transition shadow-md">
+          Proceed to Checkout
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. FOOTER -->
+  <footer class="bg-brandMaroon text-white mt-16 py-12 border-t-4 border-brandGold">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8 text-xs">
+      <div>
+        <h4 class="font-bold text-sm text-brandGold mb-3">AJMAL PERFUMES</h4>
+        <p class="text-gray-300 leading-relaxed">Crafting memories through scents for over 7 decades. Explore our rich heritage of oriental and modern French fragrances.</p>
+      </div>
+      <div>
+        <h4 class="font-bold text-sm text-brandGold mb-3">QUICK LINKS</h4>
+        <ul class="space-y-2 text-gray-300">
+          <li><a href="#" class="hover:underline">About Us</a></li>
+          <li><a href="#" class="hover:underline">Store Locator</a></li>
+          <li><a href="#" class="hover:underline">Contact Support</a></li>
+          <li><a href="#" class="hover:underline">Track Order</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-bold text-sm text-brandGold mb-3">CATEGORIES</h4>
+        <ul class="space-y-2 text-gray-300">
+          <li><a href="#" class="hover:underline">Eau De Parfum</a></li>
+          <li><a href="#" class="hover:underline">Concentrated Perfume Oil</a></li>
+          <li><a href="#" class="hover:underline">Oud & Mukhallat</a></li>
+          <li><a href="#" class="hover:underline">Luxury Gift Sets</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-bold text-sm text-brandGold mb-3">NEWSLETTER</h4>
+        <p class="text-gray-300 mb-2">Subscribe to get secret offers & updates.</p>
+        <div class="flex">
+          <input type="email" placeholder="Enter email..." class="px-3 py-2 text-black rounded-l-md w-full text-xs focus:outline-none">
+          <button class="bg-brandGold text-brandMaroon font-bold px-4 rounded-r-md hover:bg-brandGoldHover">Join</button>
+        </div>
+      </div>
+    </div>
+    <div class="text-center text-[11px] text-gray-400 mt-8 pt-4 border-t border-white/10">
+      © 2026 Ajmal Perfumes Clone Demo. All Rights Reserved.
+    </div>
+  </footer>
+
+  <!-- 9. JAVASCRIPT LOGIC -->
+  <script>
+    // Product Dataset
+    const products = [
+      {
+        id: 1,
+        title: "Aristocrat Eau De Parfum for Men",
+        category: "Perfume",
+        family: "Woody",
+        occasion: "Everyday",
+        price: 3375,
+        originalPrice: 4500,
+        size: "80ML",
+        rating: 4.8,
+        reviews: 342,
+        badge: "Bestseller",
+        image: "https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&q=80&w=400"
+      },
+      {
+        id: 2,
+        title: "Wisal Dhahab Concentrated Oud",
+        category: "Perfume",
+        family: "Oudhy",
+        occasion: "Party",
+        price: 2499,
+        originalPrice: 3200,
+        size: "50ML",
+        rating: 4.7,
+        reviews: 218,
+        badge: "25% OFF",
+        image: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&q=80&w=400"
+      },
+      {
+        id: 3,
+        title: "Blu Eau De Parfum Fresh Sport",
+        category: "Perfume",
+        family: "Aquatic",
+        occasion: "Everyday",
+        price: 1850,
+        originalPrice: 2200,
+        size: "90ML",
+        rating: 4.5,
+        reviews: 145,
+        badge: "Hot",
+        image: "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&q=80&w=400"
+      },
+      {
+        id: 4,
+        title: "Pure Oud Amber Concentrated Oil",
+        category: "Attar",
+        family: "Amber",
+        occasion: "Winter",
+        price: 1200,
+        originalPrice: 1600,
+        size: "12ML",
+        rating: 4.9,
+        reviews: 89,
+        badge: "Attar",
+        image: "https://images.unsplash.com/photo-1615397349754-cfa2066a298e?auto=format&fit=crop&q=80&w=400"
+      },
+      {
+        id: 5,
+        title: "Kuro Spicy Citrus Intense Spray",
+        category: "Perfume",
+        family: "Citrus",
+        occasion: "Office",
+        price: 2800,
+        originalPrice: 3500,
+        size: "100ML",
+        rating: 4.6,
+        reviews: 176,
+        badge: "New",
+        image: "https://images.unsplash.com/photo-1588405748880-12d1d2a59f75?auto=format&fit=crop&q=80&w=400"
+      },
+      {
+        id: 6,
+        title: "Royal Oud Luxury Gift Set",
+        category: "Gift Pack",
+        family: "Oudhy",
+        occasion: "Party",
+        price: 4200,
+        originalPrice: 5500,
+        size: "3-in-1 Set",
+        rating: 4.9,
+        reviews: 94,
+        badge: "Gift Set",
+        image: "https://images.unsplash.com/photo-1547887537-6158d64c35b3?auto=format&fit=crop&q=80&w=400"
+      }
+    ];
+
+    let cart = [];
+
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Render Products
+    function renderProducts(items) {
+      const grid = document.getElementById('productGrid');
+      document.getElementById('productCount').innerText = items.length;
+
+      if(items.length === 0) {
+        grid.innerHTML = `<div class="col-span-full text-center py-12 text-gray-500">No products match your selected filters.</div>`;
+        return;
+      }
+
+      grid.innerHTML = items.map(p => `
+        <div class="bg-white border border-gray-100 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition group">
+          <div class="relative bg-gray-50 aspect-square overflow-hidden">
+            <span class="absolute top-2 left-2 z-10 bg-brandMaroon text-brandGold text-[10px] font-bold px-2 py-0.5 rounded uppercase">${p.badge}</span>
+            <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+          </div>
+          <div class="p-4 space-y-2">
+            <div class="text-[11px] text-brandGold font-semibold uppercase tracking-wider">${p.category} • ${p.family}</div>
+            <h3 class="font-bold text-sm text-gray-800 line-clamp-1 group-hover:text-brandMaroon">${p.title}</h3>
+            
+            <!-- Rating & Reviews -->
+            <div class="flex items-center gap-1 text-xs text-amber-500">
+              <span>★</span>
+              <span class="font-bold text-gray-700">${p.rating}</span>
+              <span class="text-gray-400">(${p.reviews})</span>
+            </div>
+
+            <!-- Price -->
+            <div class="flex items-center gap-2 pt-1">
+              <span class="font-bold text-base text-brandMaroon">₹${p.price.toLocaleString()}</span>
+              <span class="text-xs text-gray-400 line-through">₹${p.originalPrice.toLocaleString()}</span>
+            </div>
+
+            <button onclick="addToCart(${p.id})" class="w-full mt-2 bg-gray-900 hover:bg-brandMaroon text-white font-semibold py-2 rounded text-xs transition flex items-center justify-center gap-2">
+              <i data-lucide="shopping-cart" class="w-3.5 h-3.5"></i> Add to Cart
+            </button>
+          </div>
+        </div>
+      `).join('');
+      
+      lucide.createIcons();
+    }
+
+    // Filter and Sort Logic
+    function applyFiltersAndSort() {
+      const selectedCategories = Array.from(document.querySelectorAll('.filter-category:checked')).map(cb => cb.value);
+      const selectedFamilies = Array.from(document.querySelectorAll('.filter-family:checked')).map(cb => cb.value);
+      const selectedOccasions = Array.from(document.querySelectorAll('.filter-occasion:checked')).map(cb => cb.value);
+      const maxPrice = Number(document.getElementById('priceRange').value);
+      const sortValue = document.getElementById('sortSelect').value;
+      const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+
+      let filtered = products.filter(p => {
+        const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(p.category);
+        const matchesFamily = selectedFamilies.length === 0 || selectedFamilies.includes(p.family);
+        const matchesOccasion = selectedOccasions.length === 0 || selectedOccasions.includes(p.occasion);
+        const matchesPrice = p.price <= maxPrice;
+        const matchesSearch = p.title.toLowerCase().includes(searchQuery);
+
+        return matchesCategory && matchesFamily && matchesOccasion && matchesPrice && matchesSearch;
+      });
+
+      // Sorting
+      if (sortValue === 'price-low') filtered.sort((a, b) => a.price - b.price);
+      if (sortValue === 'price-high') filtered.sort((a, b) => b.price - a.price);
+      if (sortValue === 'rating') filtered.sort((a, b) => b.rating - a.rating);
+      if (sortValue === 'best-selling') filtered.sort((a, b) => b.reviews - a.reviews);
+
+      renderProducts(filtered);
+    }
+
+    // Reset Filters
+    function resetFilters() {
+      document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+      document.getElementById('priceRange').value = 5000;
+      document.getElementById('priceValue').innerText = '5000';
+      document.getElementById('searchInput').value = '';
+      applyFiltersAndSort();
+    }
+
+    // Cart Logic
+    function addToCart(productId) {
+      const item = products.find(p => p.id === productId);
+      cart.push(item);
+      updateCartUI();
+      toggleCart();
+    }
+
+    function updateCartUI() {
+      document.getElementById('cartCount').innerText = cart.length;
+      const cartItems = document.getElementById('cartItems');
+      const cartTotal = document.getElementById('cartTotal');
+
+      if (cart.length === 0) {
+        cartItems.innerHTML = `<p class="text-sm text-gray-500 text-center py-8">Your cart is empty.</p>`;
+        cartTotal.innerText = '₹0';
+        return;
+      }
+
+      let total = 0;
+      cartItems.innerHTML = cart.map((item, index) => {
+        total += item.price;
+        return `
+          <div class="flex items-center justify-between border-b pb-3">
+            <div class="flex items-center gap-3">
+              <img src="${item.image}" class="w-12 h-12 rounded object-cover">
+              <div>
+                <h4 class="text-xs font-bold line-clamp-1">${item.title}</h4>
+                <p class="text-xs text-brandMaroon font-semibold">₹${item.price}</p>
+              </div>
+            </div>
+            <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-700 text-xs font-bold">Remove</button>
+          </div>
+        `;
+      }).join('');
+
+      cartTotal.innerText = `₹${total.toLocaleString()}`;
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      updateCartUI();
+    }
+
+    function toggleCart() {
+      const drawer = document.getElementById('cartDrawer');
+      drawer.classList.toggle('hidden');
+    }
+
+    // Live Search Event Listener
+    document.getElementById('searchInput').addEventListener('input', applyFiltersAndSort);
+
+    // Initial Render
+    renderProducts(products);
+  </script>
+</body>
+</html>
